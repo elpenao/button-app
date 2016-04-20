@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description" content="[mocha template]">
+  <meta charset="utf-8">
+  <title>Button App</title>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.18.2/mocha.css">
+</head>
+<body>
+  <div style="margin: 20px;">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2>Hello Button!</h2>
+        <p>Below is my solution to flatten an arbitrarily-deep nested Array-like structure.</p>
+        <p>I opted for a recursive solution. While it risks overloding the call stack for very large and nested arrays, I think it provides a simpler solution.</p>
+        <p>The function will create a results array to store the results and recurively call itself if an element is an array itself. This way we can handle arbitrarily nested arrays.</p>
+        <pre>
+          function flatten(arr) {
+            // create and array to store flattened results
+            var result = [];
+            // go through every element in the array
+            arr.forEach(function(el){
+              // if the element is an array, recursively call flatten to and concatenate the results
+              if(Array.isArray(el)) result = result.concat(flatten(el))
+              // if it is not null just push it to the results
+              else if (el !== null) result.push(el)
+            })
+            return result
+          }
+        </pre>
+        <p>Below are some tests running with mocha an chai, and <a href="https://repl.it/CH36/2">here</a> is an ES6 solution on repl.it</p>
+      </div>
+      <div id="mocha" class="col-lg-12"></div>
+    </div>
+  </div>
+  
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/mocha/1.18.2/mocha.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/chai/1.9.0/chai.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script>
+   
+    
+    mocha.setup('bdd');
+    var expect = chai.expect;
+
+    function flatten(arr) {
+		  var result = [];
+		  arr.forEach(function(el){
+		  	if(Array.isArray(el)) result = result.concat(flatten(el))
+		  	else if (el !== null) result.push(el)
+		  })
+		  return result
+		}
+    
+    describe('Flattens simple arrays', function() {
+      it('[[0, 2, 1]] => [0,2,1]', function() {
+        expect(flatten([[0, 2, 1]])).to.eql([0,2,1]);
+      });
+    });
+
+    describe('Does not include null values', function() {
+      it('[[0, 2, 1],[null]] => [0,2,1]', function() {
+        expect(flatten([[0, 2, 1],[null]])).to.eql([0,2,1]);
+      });
+    });
+
+    describe('Flattens deeply nested arrays', function() {
+      it('[0, 2, [[2, 3], 8, 100, null, [[null]]], -2, [[[4]]],[4,[9]]] => [0,2,2,3,8,100,-2,4,4,9]', function() {
+        expect(flatten([0, 2, [[2, 3], 8, 100, null, [[null]]], -2, [[[4]]],[4,[9]]])).to.eql([0,2,2,3,8,100,-2,4,4,9]);
+      });
+    });
+
+    describe('Flattens very deeply nested arrays', function() {
+      it('[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[4]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]', function() {
+        expect(flatten([[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[4]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]])).to.eql([4]);
+      });
+    });
+    
+    mocha.run();
+  </script>
+
+<script id="jsbin-source-html" type="text/html">
